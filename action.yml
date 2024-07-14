@@ -23,31 +23,31 @@ inputs:
     default: "project"
 runs:
   using: "composite"
-  runs-on: ubuntu-latest
   steps:
-  - uses: actions/checkout@v4
-      - name: Clone xc-tauri-rasp repository
-        run: |
-          git clone https://github.com/Shiritai/xc-tauri-rasp.git
+    - uses: actions/checkout@v4
+    
+    - name: Clone xc-tauri-rasp repository
+      run: |
+        git clone https://github.com/Shiritai/xc-tauri-rasp.git
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-      - name: Pull image for cross compilation
-        if: "${{ inputs.image != '' }}"
-        run: |
-          docker pull ${{ inputs.image }}
-          docker image tag ${{ inputs.image }} "${{ inputs.project-name }}-${{ inputs.arch }}-${{ inputs.env }}"
-        shell: bash
+    - name: Pull image for cross compilation
+      if: "${{ inputs.image != '' }}"
+      run: |
+        docker pull ${{ inputs.image }}
+        docker image tag ${{ inputs.image }} "${{ inputs.project-name }}-${{ inputs.arch }}-${{ inputs.env }}"
+      shell: bash
 
-      - name: Cross compile using `xc-tauri-rasp`
-        run: |
-          mkdir -p ${{ github.workspace }}/target
-          ${{ github.workspace }}/xc-tauri-rasp/xcompile.sh -a ${{ inputs.arch }} -e ${{ inputs.env }} -n ${{ inputs.project-name }} -p ${{ github.workspace }} -t ${{ github.workspace }}/target
-        shell: bash
+    - name: Cross compile using `xc-tauri-rasp`
+      run: |
+        mkdir -p ${{ github.workspace }}/target
+        ${{ github.workspace }}/xc-tauri-rasp/xcompile.sh -a ${{ inputs.arch }} -e ${{ inputs.env }} -n ${{ inputs.project-name }} -p ${{ github.workspace }} -t ${{ github.workspace }}/target
+      shell: bash
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.project-name }}.deb
-          path: ${{ github.workspace }}/target/*.deb
+    - name: Upload the artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.project-name }}.deb
+        path: ${{ github.workspace }}/target/*.deb
