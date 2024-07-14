@@ -28,7 +28,9 @@ runs:
     
     - name: Clone xc-tauri-rasp repository
       run: |
+        cd ${{ github.workspace }}
         git clone https://github.com/Shiritai/xc-tauri-rasp.git
+      shell: bash
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
